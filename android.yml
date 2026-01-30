@@ -1,0 +1,26 @@
+name: Build Android APK
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install Briefcase
+        run: |
+          pip install --upgrade pip
+          pip install briefcase
+      - name: Build APK
+        run: |
+          briefcase create android
+          briefcase build android
+          briefcase package android
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: build/**/outputs/**/*.apk
